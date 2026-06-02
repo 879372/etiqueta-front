@@ -53,9 +53,9 @@ export async function listPrinters(): Promise<string[]> {
   return Array.isArray(printers) ? printers : [printers];
 }
 
-export async function printRaw(printerName: string, tspl: string): Promise<void> {
+export async function printRaw(printerName: string, tspl: any): Promise<void> {
   await connectQZ();
   const config = qz.configs.create(printerName, { raw: true });
-  const data = [{ type: 'raw', format: 'plain', data: tspl }];
+  const data = Array.isArray(tspl) ? tspl : [{ type: 'raw', format: 'plain', data: tspl }];
   await qz.print(config, data);
 }

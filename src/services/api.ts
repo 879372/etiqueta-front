@@ -11,7 +11,7 @@ export interface LabelData {
   copies: number;
 }
 
-export async function generateTspl(data: LabelData): Promise<string> {
+export async function generateTspl(data: LabelData): Promise<any> {
   const response = await axios.post(`${API_URL}/generate-tspl/`, data);
   return response.data.tspl;
 }
