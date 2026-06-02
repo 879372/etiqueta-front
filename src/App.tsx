@@ -7,14 +7,16 @@ import type { LabelData } from './services/api';
 import { printRaw } from './services/qztray';
 
 function App() {
-  const [labelData, setLabelData] = useState<LabelData>({
-    product_name: '',
-    code: '',
-    barcode: '',
-    price: '',
-    copies: 1,
-  });
   const [printer, setPrinter] = useState('');
+  const [model, setModel] = useState('small_3');
+  const [labelData, setLabelData] = useState<LabelData>({
+    model: 'small_3',
+    product_name: 'FITA DUPLA FACE 48X30',
+    code: '46668',
+    barcode: '7896603802096',
+    price: '37,57',
+    copies: 3,
+  });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -53,7 +55,8 @@ function App() {
         <section className="form-section">
           <PrinterSelect onSelect={setPrinter} />
           <LabelForm
-            onChange={setLabelData}
+            data={labelData}
+            onChange={(data) => setLabelData(prev => ({ ...prev, ...data }))}
             onPrint={handlePrint}
             loading={loading}
           />

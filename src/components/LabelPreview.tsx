@@ -7,6 +7,34 @@ interface Props {
 // Preview visual proporcional à etiqueta real (100mm x 60mm)
 // Escala: 1mm = 3.78px (96dpi)
 export function LabelPreview({ data }: Props) {
+  if (data.model === 'small_3') {
+    return (
+      <div style={{ display: 'flex', width: 340, height: 57, background: '#fff', border: '1px dashed #ccc', fontFamily: 'monospace' }}>
+        {[0, 1, 2].map(col => (
+          <div key={col} style={{ flex: 1, borderRight: col < 2 ? '1px dashed #eee' : 'none', padding: 4, position: 'relative', overflow: 'hidden' }}>
+            <div style={{ fontSize: 9, fontWeight: 'bold', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+              {data.product_name || 'Nome Produto'}
+            </div>
+            <div style={{ fontSize: 8, color: '#444', marginTop: 2 }}>
+              COD: {data.code || '00000'}
+            </div>
+            <div style={{ fontSize: 10, fontWeight: 'bold', position: 'absolute', top: 12, right: 4 }}>
+              R$ {data.price || '0,00'}
+            </div>
+            <div style={{ position: 'absolute', bottom: 4, left: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: 1 }}>
+                {Array.from({ length: 15 }).map((_, i) => (
+                  <div key={i} style={{ width: i % 2 === 0 ? 1 : 2, height: 12, background: '#000' }} />
+                ))}
+              </div>
+              <span style={{ fontSize: 6 }}>{data.barcode || '0000'}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="label-preview" style={{ width: 378, height: 227, position: 'relative', border: '1px dashed #ccc', background: '#fff', fontFamily: 'monospace', padding: 8 }}>
       {/* Logo placeholder */}

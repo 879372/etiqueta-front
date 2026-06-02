@@ -2,34 +2,37 @@ import { useState } from 'react';
 import type { LabelData } from '../services/api';
 
 interface Props {
-  onChange: (data: LabelData) => void;
+  data: LabelData;
+  onChange: (data: Partial<LabelData>) => void;
   onPrint: () => void;
   loading: boolean;
 }
 
-export function LabelForm({ onChange, onPrint, loading }: Props) {
-  const [form, setForm] = useState<LabelData>({
-    product_name: '',
-    code: '',
-    barcode: '',
-    price: '',
-    copies: 1,
-  });
-
-  const handleChange = (field: keyof LabelData, value: string | number) => {
-    const updated = { ...form, [field]: value };
-    setForm(updated);
-    onChange(updated);
+export function LabelForm({ data, onChange, onPrint, loading }: Props) {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onPrint();
   };
 
   return (
-    <div className="label-form">
+    <form className="label-form" onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label>Modelo de Etiqueta</label>
+        <select
+          value={data.model || 'large'}
+          onChange={e => onChange({ model: e.target.value })}
+        >
+          <option value="small_3">Etiqueta Argox 90x15 (3 Colunas)</option>
+          <option value="large">Padrão 100x60mm</option>
+        </select>
+      </div>
+
       <div className="field">
         <label>Nome do Produto</label>
         <input
           type="text"
-          value={form.product_name}
-          onChange={e => handleChange('product_name', e.target.value)}
+          value={data.product_name}
+          onChange={e => onChange({ product_name: e.target.value })}
           placeholder="Ex: ACHOCOLATADO PO DOIS FRADES"
         />
       </div>
@@ -38,8 +41,8 @@ export function LabelForm({ onChange, onPrint, loading }: Props) {
         <label>Código (COD)</label>
         <input
           type="text"
-          value={form.code}
-          onChange={e => handleChange('code', e.target.value)}
+          value={data.code}
+          onChange={e => onChange({ code: e.target.value })}
           placeholder="Ex: 309411"
         />
       </div>
@@ -48,8 +51,8 @@ export function LabelForm({ onChange, onPrint, loading }: Props) {
         <label>Código de Barras (EAN-13)</label>
         <input
           type="text"
-          value={form.barcode}
-          onChange={e => handleChange('barcode', e.target.value)}
+          value={data.barcode}
+          onChange={e => onChange({ barcode: e.target.value })}
           placeholder="Ex: 7891027309411"
           maxLength={13}
         />
@@ -59,24 +62,24 @@ export function LabelForm({ onChange, onPrint, loading }: Props) {
         <label>Preço (R$)</label>
         <input
           type="text"
-          value={form.price}
-          onChange={e => handleChange('price', e.target.value)}
+          value={data.price}
+          onChange={e => onChange({ price: e.target.value })}
           placeholder="Ex: 44,38"
         />
       </div>
 
       <div className="field">
-        <label>Quantidade de Cópias</label>
+        <label>{data.model === 'small_3' ? 'Qtd de Linhas (3 etiquetas por linha)' : 'Quantidade de Cópias'}</label>
         <input
           type="number"
           min={1}
           max={999}
-          value={form.copies}
-          onChange={e => handleChange('copies', parseInt(e.target.value) || 1)}
+          value={data.copies}
+          onChange={e => onChange({ copies: parseInt(e.target.value) || 1 })}
         />
       </div>
 
-      <button onClick={onPrint} disabled={loading}>
+      <button type="submit" disabled={loading}>
         {loading ? 'Enviando...' : '🖨️ Imprimir'}
       </button>
     </div>
