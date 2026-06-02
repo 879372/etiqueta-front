@@ -15,7 +15,7 @@ export async function connectQZ(): Promise<void> {
   if (!connectionPromise) {
     connectionPromise = qz.websocket.connect()
       .then(() => { connectionPromise = null; })
-      .catch((err) => { 
+      .catch((err: any) => { 
         connectionPromise = null; 
         throw err; 
       });
