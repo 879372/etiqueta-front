@@ -1,4 +1,5 @@
 import type { LabelData } from '../services/api';
+import logoUrl from '../assets/logo.png';
 
 interface Props {
   data: LabelData;
@@ -38,15 +39,21 @@ export function LabelPreview({ data }: Props) {
   if (data.model === 'medium_115x35') {
     return (
       <div style={{ width: 434, height: 132, background: '#fff', border: '1px dashed #ccc', fontFamily: 'monospace', padding: 8, position: 'relative' }}>
-        <div style={{ fontSize: 18, fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <div style={{ fontSize: 18, fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: 12 }}>
           {data.product_name || 'Nome do Produto'}
         </div>
-        <div style={{ fontSize: 14, color: '#444', marginTop: 12 }}>
+        
+        {/* Placeholder para Logo */}
+        <div style={{ position: 'absolute', bottom: 12, left: 12, width: 80, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img src={logoUrl} alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%', filter: 'grayscale(100%) contrast(200%)' }} />
+        </div>
+
+        <div style={{ position: 'absolute', bottom: 65, left: 110, fontSize: 14, color: '#444' }}>
           COD: {data.code || '00000'}
         </div>
-        <div style={{ position: 'absolute', bottom: 12, left: 8, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <div style={{ position: 'absolute', bottom: 12, left: 110, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <div style={{ display: 'flex', gap: 2 }}>
-            {Array.from({ length: 40 }).map((_, i) => (
+            {Array.from({ length: 30 }).map((_, i) => (
               <div key={i} style={{ width: i % 3 === 0 ? 3 : i % 2 === 0 ? 2 : 1, height: 40, background: '#000' }} />
             ))}
           </div>
