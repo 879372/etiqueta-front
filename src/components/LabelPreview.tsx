@@ -35,6 +35,30 @@ export function LabelPreview({ data }: Props) {
     );
   }
 
+  if (data.model === 'medium_115x35') {
+    return (
+      <div style={{ width: 434, height: 132, background: '#fff', border: '1px dashed #ccc', fontFamily: 'monospace', padding: 8, position: 'relative' }}>
+        <div style={{ fontSize: 18, fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {data.product_name || 'Nome do Produto'}
+        </div>
+        <div style={{ fontSize: 14, color: '#444', marginTop: 12 }}>
+          COD: {data.code || '00000'}
+        </div>
+        <div style={{ position: 'absolute', bottom: 12, left: 8, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', gap: 2 }}>
+            {Array.from({ length: 40 }).map((_, i) => (
+              <div key={i} style={{ width: i % 3 === 0 ? 3 : i % 2 === 0 ? 2 : 1, height: 40, background: '#000' }} />
+            ))}
+          </div>
+          <span style={{ fontSize: 12, marginTop: 4 }}>{data.barcode || '000000000000'}</span>
+        </div>
+        <div style={{ position: 'absolute', bottom: 16, right: 16, fontSize: 32, fontWeight: 'bold' }}>
+          R$ {data.price || '0,00'}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="label-preview" style={{ width: 378, height: 227, position: 'relative', border: '1px dashed #ccc', background: '#fff', fontFamily: 'monospace', padding: 8 }}>
       {/* Logo placeholder */}

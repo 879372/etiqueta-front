@@ -22,6 +22,7 @@ export function LabelForm({ data, onChange, onPrint, loading }: Props) {
           onChange={e => onChange({ model: e.target.value })}
         >
           <option value="small_3">Etiqueta Argox 90x15 (3 Colunas)</option>
+          <option value="medium_115x35">Etiqueta Argox 115x35mm</option>
           <option value="large">Padrão 100x60mm</option>
         </select>
       </div>
