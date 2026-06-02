@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { LabelData } from '../services/api';
 
 interface Props {
@@ -82,6 +81,6 @@ export function LabelForm({ data, onChange, onPrint, loading }: Props) {
       <button type="submit" disabled={loading}>
         {loading ? 'Enviando...' : '🖨️ Imprimir'}
       </button>
-    </div>
+    </form>
   );
 }
