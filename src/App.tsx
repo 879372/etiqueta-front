@@ -8,7 +8,6 @@ import { printRaw } from './services/qztray';
 
 function App() {
   const [printer, setPrinter] = useState('');
-  const [model, setModel] = useState('small_3');
   const [labelData, setLabelData] = useState<LabelData>({
     model: 'small_3',
     product_name: 'FITA DUPLA FACE 48X30',
