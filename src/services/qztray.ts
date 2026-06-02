@@ -56,6 +56,15 @@ export async function listPrinters(): Promise<string[]> {
 export async function printRaw(printerName: string, tspl: any): Promise<void> {
   await connectQZ();
   const config = qz.configs.create(printerName, { raw: true });
-  const data = Array.isArray(tspl) ? tspl : [{ type: 'raw', format: 'plain', data: tspl }];
+  
+  let data: any[];
+  if (Array.isArray(tspl)) {
+    data = tspl.map(item => 
+      typeof item === 'string' ? { type: 'raw', format: 'command', data: item } : item
+    );
+  } else {
+    data = [{ type: 'raw', format: 'command', data: tspl }];
+  }
+  
   await qz.print(config, data);
 }

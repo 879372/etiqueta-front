@@ -36,8 +36,8 @@ function App() {
       await printRaw(printer, tspl);
 
       setMessage(`✅ ${labelData.copies} etiqueta(s) enviada(s) para impressão!`);
-    } catch (err) {
-      setMessage('❌ Erro ao imprimir. Verifique a impressora, o QZ Tray, e a conexão com o backend.');
+    } catch (err: any) {
+      setMessage(`❌ Erro ao imprimir: ${err.message || JSON.stringify(err)}`);
       console.error(err);
     } finally {
       setLoading(false);
