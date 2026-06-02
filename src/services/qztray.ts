@@ -1,10 +1,27 @@
 import qz from 'qz-tray';
+import certStr from '../../digital-certificate.txt?raw';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 // Configurações obrigatórias para funcionar com o Vite/React moderno
 qz.api.setPromiseType((resolver: any) => new Promise(resolver));
 qz.api.setSha256Type((data: string) => {
   return crypto.subtle.digest('SHA-256', new TextEncoder().encode(data))
     .then(hash => Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join(''));
+});
+
+qz.security.setCertificatePromise((resolve: any) => {
+  resolve(certStr);
+});
+
+qz.security.setSignatureAlgorithm("SHA512");
+qz.security.setSignaturePromise((toSign: string) => {
+  return function(resolve: any, reject: any) {
+    axios.get(`${API_URL}/sign/?request=${encodeURIComponent(toSign)}`)
+      .then(res => resolve(res.data))
+      .catch(reject);
+  };
 });
 
 let connectionPromise: Promise<void> | null = null;
