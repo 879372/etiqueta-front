@@ -83,22 +83,24 @@ function App() {
         </div>
       )}
 
-      <main className="main-grid">
-        <aside className="sidebar">
-          <ProductSearch onSelect={handleProductSelect} />
+      <main>
+        <div className="main-grid" style={{ marginBottom: '2rem' }}>
+          <aside className="sidebar">
+            <div className="card">
+              <PrinterSelect onSelect={setPrinter} />
+            </div>
+          </aside>
 
-          <div className="card">
-            <PrinterSelect onSelect={setPrinter} />
-          </div>
-        </aside>
+          <section className="form-section">
+            <LabelForm
+              data={labelData}
+              onChange={(data) => setLabelData(prev => ({ ...prev, ...data }))}
+              onPreview={() => setIsModalOpen(true)}
+            />
+          </section>
+        </div>
 
-        <section className="form-section">
-          <LabelForm
-            data={labelData}
-            onChange={(data) => setLabelData(prev => ({ ...prev, ...data }))}
-            onPreview={() => setIsModalOpen(true)}
-          />
-        </section>
+        <ProductSearch onSelect={handleProductSelect} />
       </main>
 
       <Modal 
