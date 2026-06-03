@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { fetchProducts } from '../services/productsApi';
 import type { Product } from '../services/productsApi';
 import { ProductCrudModal } from './ProductCrudModal';
+import { formatCurrency } from '../utils/format';
 
 interface ProductSearchProps {
   onSelect: (product: Product) => void;
@@ -107,7 +108,7 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
                   <td><strong>{p.codigo}</strong></td>
                   <td>{p.descricao}</td>
                   <td>{p.codigo_de_barras || '-'}</td>
-                  <td>{p.valor}</td>
+                  <td>{formatCurrency(p.valor)}</td>
                   <td style={{ textAlign: 'right' }}>
                     <button 
                       className="action-btn"

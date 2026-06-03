@@ -1,4 +1,5 @@
 import type { LabelData } from '../services/api';
+import { formatCurrency, handleCurrencyMask } from '../utils/format';
 
 interface Props {
   data: LabelData;
@@ -66,9 +67,9 @@ export function LabelForm({ data, onChange, onPreview }: Props) {
           <label>Preço (R$)</label>
           <input
             type="text"
-            value={data.price}
-            onChange={e => onChange({ price: e.target.value })}
-            placeholder="Ex: 44,38"
+            value={data.price ? formatCurrency(data.price) : ''}
+            onChange={e => handleCurrencyMask(e, (val) => onChange({ price: val }))}
+            placeholder="Ex: R$ 44,38"
             required
           />
         </div>
