@@ -3,8 +3,10 @@ import { LabelForm } from './components/LabelForm';
 import { PrinterSelect } from './components/PrinterSelect';
 import { LabelPreview } from './components/LabelPreview';
 import { ProductSearch } from './components/ProductSearch';
+import { ProductCrudModal } from './components/ProductCrudModal';
 import { Modal } from './components/Modal';
 import { generateTspl } from './services/api';
+import type { Product } from './services/productsApi';
 import type { LabelData } from './services/api';
 import { printRaw } from './services/qztray';
 import logoUrl from './assets/logo.png';
@@ -23,6 +25,17 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', isError: false });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCrudOpen, setIsCrudOpen] = useState(false);
+
+  const handleProductSelect = (product: Product) => {
+    setLabelData(prev => ({
+      ...prev,
+      product_name: product.descricao,
+      code: product.codigo,
+      barcode: product.codigo_de_barras || '',
+      price: product.valor,
+    }));
+  };
 
   const handlePrint = async () => {
     if (!printer) {
@@ -54,9 +67,14 @@ function App() {
 
   return (
     <div className="app">
-      <header>
-        <img src={logoUrl} alt="Câmara Cascudo" className="header-logo" />
-        <h1>Sistema de Etiquetas</h1>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <img src={logoUrl} alt="Câmara Cascudo" className="header-logo" />
+          <h1>Sistema de Etiquetas</h1>
+        </div>
+        <button className="btn-secondary" onClick={() => setIsCrudOpen(true)} style={{ width: 'auto' }}>
+          Gerenciar Produtos
+        </button>
       </header>
 
       <main>
@@ -66,7 +84,7 @@ function App() {
           </div>
         )}
 
-        <ProductSearch />
+        <ProductSearch onSelect={handleProductSelect} />
 
         <div className="card">
           <PrinterSelect onSelect={setPrinter} />
@@ -107,6 +125,8 @@ function App() {
           </p>
         )}
       </Modal>
+
+      <ProductCrudModal isOpen={isCrudOpen} onClose={() => setIsCrudOpen(false)} />
     </div>
   );
 }
