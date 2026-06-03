@@ -86,7 +86,7 @@ export function LabelForm({ data, onChange, onPreview }: Props) {
         </div>
 
         <button type="submit" className="btn-primary" style={{ marginTop: '1rem' }}>
-          👁️ Visualizar Etiqueta
+          Visualizar Etiqueta
         </button>
       </form>
     </div>

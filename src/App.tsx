@@ -99,7 +99,7 @@ function App() {
       <Modal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
-        title="Pré-visualização da Etiqueta"
+        title={`Pré-visualização da Etiqueta (${labelData.copies} ${labelData.copies === 1 ? 'cópia' : 'cópias'})`}
         footer={
           <>
             <button className="btn-secondary" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: '0.875rem' }}>

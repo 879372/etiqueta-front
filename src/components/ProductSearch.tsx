@@ -43,7 +43,7 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
       } finally {
         setIsSearching(false);
       }
-    }, 300);
+    }, 500);
 
     return () => clearTimeout(delayDebounceFn);
   }, [query, refreshTrigger]);
@@ -65,23 +65,22 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
 
   return (
     <div className="glass-card product-search">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h2 style={{ marginBottom: 0 }}>🔍 Buscar e Selecionar Produto</h2>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <div className="search-input-wrapper" style={{ width: '300px', maxWidth: '100%' }}>
-            <span className="search-icon">🔎</span>
-            <input
-              type="text"
-              placeholder="Buscar por código, nome ou barras..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            {isSearching && <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>⏳</span>}
-          </div>
-          <button className="btn-secondary" onClick={handleAdd} style={{ width: 'auto', padding: '0.85rem 1.25rem' }}>
-            ➕ Adicionar
-          </button>
-        </div>
+        <button className="btn-secondary" onClick={handleAdd} style={{ width: 'auto', padding: '0.5rem 1rem' }}>
+          ➕ Adicionar
+        </button>
+      </div>
+
+      <div className="search-input-wrapper" style={{ width: '100%', marginBottom: '1.5rem' }}>
+        <span className="search-icon">🔎</span>
+        <input
+          type="text"
+          placeholder="Buscar por código, nome ou barras..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        {isSearching && <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>⏳</span>}
       </div>
 
       <div style={{ overflowX: 'auto' }}>

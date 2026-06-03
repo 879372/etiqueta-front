@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from './Modal';
 import { createProduct, updateProduct } from '../services/productsApi';
 import type { Product } from '../services/productsApi';
+import { formatCurrency, handleCurrencyMask } from '../utils/format';
 
 interface ProductCrudModalProps {
   isOpen: boolean;
@@ -59,6 +60,7 @@ export function ProductCrudModal({ isOpen, onClose, product, onSaveSuccess }: Pr
               <input
                 required
                 type="text"
+                placeholder="Ex: 309411"
                 value={formData.codigo}
                 onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
               />
@@ -67,6 +69,7 @@ export function ProductCrudModal({ isOpen, onClose, product, onSaveSuccess }: Pr
               <label>Código de Barras</label>
               <input
                 type="text"
+                placeholder="Ex: 7891027309411"
                 value={formData.codigo_de_barras || ''}
                 onChange={(e) => setFormData({ ...formData, codigo_de_barras: e.target.value })}
               />
@@ -76,6 +79,7 @@ export function ProductCrudModal({ isOpen, onClose, product, onSaveSuccess }: Pr
               <input
                 required
                 type="text"
+                placeholder="Ex: ACHOCOLATADO PO DOIS FRADES"
                 value={formData.descricao}
                 onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
               />
@@ -84,11 +88,10 @@ export function ProductCrudModal({ isOpen, onClose, product, onSaveSuccess }: Pr
               <label>Valor*</label>
               <input
                 required
-                type="number"
-                step="0.01"
-                min="0"
-                value={formData.valor}
-                onChange={(e) => setFormData({ ...formData, valor: e.target.value })}
+                type="text"
+                placeholder="Ex: R$ 44,38"
+                value={formData.valor ? formatCurrency(formData.valor) : ''}
+                onChange={(e) => handleCurrencyMask(e, (val) => setFormData({ ...formData, valor: val }))}
               />
             </div>
           </div>
