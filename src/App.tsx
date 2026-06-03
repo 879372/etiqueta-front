@@ -73,28 +73,32 @@ function App() {
           <h1>Sistema de Etiquetas</h1>
         </div>
         <button className="btn-secondary" onClick={() => setIsCrudOpen(true)} style={{ width: 'auto' }}>
-          Gerenciar Produtos
+          ✨ Gerenciar Produtos
         </button>
       </header>
 
-      <main>
-        {message.text && (
-          <div className={`message ${message.isError ? 'error' : ''}`} style={{ gridColumn: '1 / -1' }}>
-            {message.text}
-          </div>
-        )}
-
-        <ProductSearch onSelect={handleProductSelect} />
-
-        <div className="card">
-          <PrinterSelect onSelect={setPrinter} />
+      {message.text && (
+        <div className={`message ${message.isError ? 'error' : ''}`} style={{ marginBottom: '2rem' }}>
+          {message.text}
         </div>
+      )}
 
-        <LabelForm
-          data={labelData}
-          onChange={(data) => setLabelData(prev => ({ ...prev, ...data }))}
-          onPreview={() => setIsModalOpen(true)}
-        />
+      <main className="main-grid">
+        <aside className="sidebar">
+          <ProductSearch onSelect={handleProductSelect} />
+
+          <div className="card">
+            <PrinterSelect onSelect={setPrinter} />
+          </div>
+        </aside>
+
+        <section className="form-section">
+          <LabelForm
+            data={labelData}
+            onChange={(data) => setLabelData(prev => ({ ...prev, ...data }))}
+            onPreview={() => setIsModalOpen(true)}
+          />
+        </section>
       </main>
 
       <Modal 

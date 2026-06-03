@@ -80,7 +80,7 @@ export function ProductCrudModal({ isOpen, onClose }: ProductCrudModalProps) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Gerenciar Produtos">
+    <Modal isOpen={isOpen} onClose={onClose} title="Gerenciar Produtos" large>
       <div className="product-crud">
         {error && <div className="message error" style={{ marginBottom: '1rem' }}>{error}</div>}
         

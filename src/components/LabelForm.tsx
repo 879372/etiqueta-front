@@ -18,16 +18,16 @@ export function LabelForm({ data, onChange, onPreview }: Props) {
       <form className="label-form" onSubmit={handleSubmit}>
         <div className="field">
           <label>Modelo de Etiqueta</label>
-          <select
-            value={data.model || 'medium_115x35'}
-            onChange={e => onChange({ model: e.target.value })}
-            className="printer-select"
-            style={{ width: '100%', marginBottom: '1.25rem' }}
-          >
-            <option value="small_3">Etiqueta Argox 90x15 (3 Colunas)</option>
-            <option value="medium_115x35">Etiqueta Argox 115x35mm</option>
-            <option value="large">Padrão 100x60mm</option>
-          </select>
+          <div className="select-wrapper">
+            <select
+              value={data.model || 'medium_115x35'}
+              onChange={e => onChange({ model: e.target.value })}
+            >
+              <option value="small_3">Etiqueta Argox 90x15 (3 Colunas)</option>
+              <option value="medium_115x35">Etiqueta Argox 115x35mm</option>
+              <option value="large">Padrão 100x60mm</option>
+            </select>
+          </div>
         </div>
 
         <div className="field">

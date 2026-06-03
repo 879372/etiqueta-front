@@ -30,7 +30,7 @@ export function PrinterSelect({ onSelect }: Props) {
   return (
     <div className="printer-select">
       <h2>🖨️ Selecionar Impressora</h2>
-      <div className="field" style={{ marginTop: '1rem', marginBottom: 0 }}>
+      <div className="select-wrapper">
         <select
         value={selected}
         onChange={e => {

@@ -6,14 +6,15 @@ interface Props {
   title: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  large?: boolean;
 }
 
-export function Modal({ isOpen, onClose, title, children, footer }: Props) {
+export function Modal({ isOpen, onClose, title, children, footer, large }: Props) {
   if (!isOpen) return null;
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
+      <div className={`modal-content ${large ? 'large' : ''}`} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h3>{title}</h3>
           <button className="close-btn" onClick={onClose} aria-label="Fechar">
