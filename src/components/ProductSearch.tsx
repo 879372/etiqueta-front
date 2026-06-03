@@ -64,7 +64,7 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
   };
 
   return (
-    <div className="glass-card product-search" style={{ marginTop: '2rem' }}>
+    <div className="glass-card product-search">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h2 style={{ marginBottom: 0 }}>🔍 Buscar e Selecionar Produto</h2>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>

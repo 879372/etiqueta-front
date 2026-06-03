@@ -72,7 +72,7 @@ header h1 {
 .main-grid {
   display: grid;
   grid-template-columns: 1fr 450px;
-  gap: 2rem;
+  gap: 1rem;
   align-items: start;
 }
 
@@ -85,7 +85,7 @@ header h1 {
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 /* Cards (Glassmorphism) */
