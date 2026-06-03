@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchProducts } from '../services/productsApi';
 import type { Product } from '../services/productsApi';
+import { ProductCrudModal } from './ProductCrudModal';
 
 interface ProductSearchProps {
   onSelect: (product: Product) => void;
@@ -10,27 +11,13 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Load initial 10 products
-  useEffect(() => {
-    const loadInitial = async () => {
-      setIsSearching(true);
-      try {
-        const data = await fetchProducts();
-        setResults(data.slice(0, 10)); // Take first 10
-      } catch (error) {
-        console.error('Error fetching initial products:', error);
-      } finally {
-        setIsSearching(false);
-      }
-    };
-    loadInitial();
-  }, []);
+  const [isCrudOpen, setIsCrudOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
 
-  // Filter products based on search
   useEffect(() => {
     if (!query) {
-      // If query is cleared, fetch the first 10 again (or just leave it as is if we cache, but fetching is fine)
       const loadInitial = async () => {
         setIsSearching(true);
         try {
@@ -50,7 +37,7 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
       setIsSearching(true);
       try {
         const data = await fetchProducts(query);
-        setResults(data.slice(0, 10)); // Limit to 10 results for layout sanity
+        setResults(data.slice(0, 10));
       } catch (error) {
         console.error('Error fetching products:', error);
       } finally {
@@ -59,21 +46,41 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [query]);
+  }, [query, refreshTrigger]);
+
+  const handleAdd = () => {
+    setProductToEdit(null);
+    setIsCrudOpen(true);
+  };
+
+  const handleEdit = (product: Product) => {
+    setProductToEdit(product);
+    setIsCrudOpen(true);
+  };
+
+  const handleSaveSuccess = () => {
+    setIsCrudOpen(false);
+    setRefreshTrigger(prev => prev + 1); // trigger reload
+  };
 
   return (
     <div className="glass-card product-search" style={{ marginTop: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h2 style={{ marginBottom: 0 }}>🔍 Buscar e Selecionar Produto</h2>
-        <div className="search-input-wrapper" style={{ width: '400px', maxWidth: '100%' }}>
-          <span className="search-icon">🔎</span>
-          <input
-            type="text"
-            placeholder="Buscar por código, nome ou barras..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          {isSearching && <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>⏳</span>}
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div className="search-input-wrapper" style={{ width: '300px', maxWidth: '100%' }}>
+            <span className="search-icon">🔎</span>
+            <input
+              type="text"
+              placeholder="Buscar por código, nome ou barras..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            {isSearching && <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>⏳</span>}
+          </div>
+          <button className="btn-secondary" onClick={handleAdd} style={{ width: 'auto', padding: '0.85rem 1.25rem' }}>
+            ➕ Adicionar
+          </button>
         </div>
       </div>
 
@@ -104,8 +111,16 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
                   <td>{p.valor}</td>
                   <td style={{ textAlign: 'right' }}>
                     <button 
+                      className="action-btn"
+                      onClick={() => handleEdit(p)}
+                      title="Editar Produto"
+                      style={{ marginRight: '0.5rem' }}
+                    >
+                      ✏️
+                    </button>
+                    <button 
                       className="btn-primary" 
-                      style={{ padding: '0.5rem 1rem', width: 'auto', display: 'inline-block' }}
+                      style={{ padding: '0.4rem 0.8rem', width: 'auto', display: 'inline-block', fontSize: '0.9rem' }}
                       onClick={() => onSelect(p)}
                     >
                       Selecionar
@@ -117,6 +132,13 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
           </tbody>
         </table>
       </div>
+
+      <ProductCrudModal 
+        isOpen={isCrudOpen} 
+        onClose={() => setIsCrudOpen(false)}
+        product={productToEdit}
+        onSaveSuccess={handleSaveSuccess}
+      />
     </div>
   );
 }

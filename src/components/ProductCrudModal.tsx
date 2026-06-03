@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from './Modal';
-import { fetchProducts, createProduct, updateProduct, deleteProduct } from '../services/productsApi';
+import { createProduct, updateProduct } from '../services/productsApi';
 import type { Product } from '../services/productsApi';
 
 interface ProductCrudModalProps {
   isOpen: boolean;
   onClose: () => void;
+  product: Product | null;
+  onSaveSuccess: () => void;
 }
 
-export function ProductCrudModal({ isOpen, onClose }: ProductCrudModalProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(false);
+export function ProductCrudModal({ isOpen, onClose, product, onSaveSuccess }: ProductCrudModalProps) {
   const [error, setError] = useState('');
   
-  const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState<Product>({
     codigo: '',
     descricao: '',
@@ -23,69 +22,37 @@ export function ProductCrudModal({ isOpen, onClose }: ProductCrudModalProps) {
 
   useEffect(() => {
     if (isOpen) {
-      loadProducts();
+      setError('');
+      if (product) {
+        setFormData(product);
+      } else {
+        setFormData({ codigo: '', descricao: '', codigo_de_barras: '', valor: '' });
+      }
     }
-  }, [isOpen]);
-
-  const loadProducts = async () => {
-    setLoading(true);
-    try {
-      const data = await fetchProducts();
-      setProducts(data);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [isOpen, product]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     
     try {
-      if (editingId) {
-        await updateProduct(editingId, formData);
+      if (product && product.id) {
+        await updateProduct(product.id, formData);
       } else {
         await createProduct(formData);
       }
-      setFormData({ codigo: '', descricao: '', codigo_de_barras: '', valor: '' });
-      setEditingId(null);
-      loadProducts();
+      onSaveSuccess();
     } catch (err: any) {
       setError(err.message);
     }
   };
 
-  const handleEdit = (product: Product) => {
-    setEditingId(product.id!);
-    setFormData(product);
-  };
-
-  const handleDelete = async (id: number) => {
-    if (confirm('Tem certeza que deseja remover este produto?')) {
-      try {
-        await deleteProduct(id);
-        loadProducts();
-      } catch (err: any) {
-        setError(err.message);
-      }
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setEditingId(null);
-    setFormData({ codigo: '', descricao: '', codigo_de_barras: '', valor: '' });
-    setError('');
-  };
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Gerenciar Produtos" large>
+    <Modal isOpen={isOpen} onClose={onClose} title={product ? 'Editar Produto' : 'Novo Produto'}>
       <div className="product-crud">
         {error && <div className="message error" style={{ marginBottom: '1rem' }}>{error}</div>}
         
-        <form onSubmit={handleSave} className="crud-form card" style={{ marginBottom: '2rem' }}>
-          <h3>{editingId ? 'Editar Produto' : 'Novo Produto'}</h3>
+        <form onSubmit={handleSave} className="crud-form">
           <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
             <div className="form-group">
               <label>Código*</label>
@@ -125,66 +92,15 @@ export function ProductCrudModal({ isOpen, onClose }: ProductCrudModalProps) {
               />
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-            <button type="submit" className="btn-primary" style={{ flex: 1 }}>
-              {editingId ? 'Salvar Alterações' : 'Adicionar Produto'}
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+            <button type="button" className="btn-secondary" onClick={onClose} style={{ flex: 1 }}>
+              Cancelar
             </button>
-            {editingId && (
-              <button type="button" className="btn-secondary" onClick={handleCancelEdit}>
-                Cancelar
-              </button>
-            )}
+            <button type="submit" className="btn-primary" style={{ flex: 1 }}>
+              {product ? 'Salvar Alterações' : 'Adicionar Produto'}
+            </button>
           </div>
         </form>
-
-        <div className="products-list">
-          <h3>Lista de Produtos</h3>
-          {loading ? (
-            <p>Carregando...</p>
-          ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '1rem' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--border-color)', textAlign: 'left' }}>
-                  <th style={{ padding: '0.5rem' }}>Código</th>
-                  <th style={{ padding: '0.5rem' }}>Descrição</th>
-                  <th style={{ padding: '0.5rem' }}>Valor (R$)</th>
-                  <th style={{ padding: '0.5rem', textAlign: 'right' }}>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} style={{ textAlign: 'center', padding: '1rem' }}>
-                      Nenhum produto cadastrado.
-                    </td>
-                  </tr>
-                ) : (
-                  products.map(p => (
-                    <tr key={p.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                      <td style={{ padding: '0.5rem' }}>{p.codigo}</td>
-                      <td style={{ padding: '0.5rem' }}>{p.descricao}</td>
-                      <td style={{ padding: '0.5rem' }}>{p.valor}</td>
-                      <td style={{ padding: '0.5rem', textAlign: 'right' }}>
-                        <button 
-                          onClick={() => handleEdit(p)}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', marginRight: '0.5rem' }}
-                        >
-                          ✏️
-                        </button>
-                        <button 
-                          onClick={() => handleDelete(p.id!)}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                        >
-                          🗑️
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          )}
-        </div>
       </div>
     </Modal>
   );

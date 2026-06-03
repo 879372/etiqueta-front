@@ -71,7 +71,7 @@ header h1 {
 /* Main Grid Layout */
 .main-grid {
   display: grid;
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: 1fr 450px;
   gap: 2rem;
   align-items: start;
 }

@@ -3,7 +3,6 @@ import { LabelForm } from './components/LabelForm';
 import { PrinterSelect } from './components/PrinterSelect';
 import { LabelPreview } from './components/LabelPreview';
 import { ProductSearch } from './components/ProductSearch';
-import { ProductCrudModal } from './components/ProductCrudModal';
 import { Modal } from './components/Modal';
 import { generateTspl } from './services/api';
 import type { Product } from './services/productsApi';
@@ -25,7 +24,6 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', isError: false });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCrudOpen, setIsCrudOpen] = useState(false);
 
   const handleProductSelect = (product: Product) => {
     setLabelData(prev => ({
@@ -72,9 +70,6 @@ function App() {
           <img src={logoUrl} alt="Câmara Cascudo" className="header-logo" />
           <h1>Sistema de Etiquetas</h1>
         </div>
-        <button className="btn-secondary" onClick={() => setIsCrudOpen(true)} style={{ width: 'auto' }}>
-          ✨ Gerenciar Produtos
-        </button>
       </header>
 
       {message.text && (
@@ -83,24 +78,22 @@ function App() {
         </div>
       )}
 
-      <main>
-        <div className="main-grid" style={{ marginBottom: '2rem' }}>
-          <aside className="sidebar">
-            <div className="card">
-              <PrinterSelect onSelect={setPrinter} />
-            </div>
-          </aside>
+      <main className="main-grid">
+        <aside className="sidebar">
+          <div className="card">
+            <PrinterSelect onSelect={setPrinter} />
+          </div>
 
-          <section className="form-section">
-            <LabelForm
-              data={labelData}
-              onChange={(data) => setLabelData(prev => ({ ...prev, ...data }))}
-              onPreview={() => setIsModalOpen(true)}
-            />
-          </section>
-        </div>
+          <ProductSearch onSelect={handleProductSelect} />
+        </aside>
 
-        <ProductSearch onSelect={handleProductSelect} />
+        <section className="form-section">
+          <LabelForm
+            data={labelData}
+            onChange={(data) => setLabelData(prev => ({ ...prev, ...data }))}
+            onPreview={() => setIsModalOpen(true)}
+          />
+        </section>
       </main>
 
       <Modal 
@@ -131,8 +124,6 @@ function App() {
           </p>
         )}
       </Modal>
-
-      <ProductCrudModal isOpen={isCrudOpen} onClose={() => setIsCrudOpen(false)} />
     </div>
   );
 }
